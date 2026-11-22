@@ -71,7 +71,13 @@ public class OpExp extends Exp{
 
         String out = "";
 
-        if (op.equals(Op.add) || op.equals(Op.sub) || op.equals(Op.mul) || op.equals(Op.div)) {
+        if (op.equals(Op.add)) {
+            out = String.format("\tmov %s, %%r12\n\tmov %s, %%rsi\n\tadd %%rsi, %%r12\n", leftValue, rightValue);
+        }
+        if (op.equals(Op.sub)) {
+            out = String.format("\tmov %s, %%r12\n\tmov %s, %%rsi\n\tsub %%rsi, %%r12\n", leftValue, rightValue);
+        }
+        else if (op.equals(Op.mul) || op.equals(Op.div)) {
             //TODO
         }
         else if (op.equals(Op.eq) || op.equals(Op.ge) || op.equals(Op.gt) || op.equals(Op.le) || op.equals(Op.lt) || op.equals(Op.ne)) {

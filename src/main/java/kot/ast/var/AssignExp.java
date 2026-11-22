@@ -2,6 +2,7 @@ package kot.ast.var;
 
 import kot.assembly.Assembly;
 import kot.ast.Exp;
+import kot.ast.OpExp;
 import kot.ast.type.IntType;
 import kot.ast.type.Type;
 import kot.ast.type.VoidType;
@@ -61,9 +62,18 @@ public class AssignExp extends Exp {
 
         if(var.type == IntType.getInstance())
         {
+            if (exp instanceof IntExp)
+            {
+                String out = String.format("\tmovq %s, %s\n", expValue, var.name);
+                asm.lastExp = out;
+            }
+            else if (exp instanceof OpExp)
+            {
+                String out = expValue;
+                out = out.concat(String.format("\tmovq %%r12, %s\n", var.name));
+                asm.lastExp = out;
+            }
             //System.out.println("exp : " + expValue);
-            String out = String.format("\tmovq %s, %s\n", expValue, var.name);
-            asm.lastExp = out;
         }
         // TODO Other type
 

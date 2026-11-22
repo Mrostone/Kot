@@ -123,7 +123,7 @@ exp returns [Exp node]
         }
     | left=exp op=('==' | '!=') right=exp 
         { 
-          Op o = $op.text.equals("=") ? Op.eq : Op.ne;
+          Op o = $op.text.equals("==") ? Op.eq : Op.ne;
           $node = new OpExp($left.node, o, $right.node, new Position($start.getLine(), $start.getCharPositionInLine())); 
         }
     | ID '=' e=exp { $node = new AssignExp(new VarExp($ID.text, new Position($start.getLine(), $start.getCharPositionInLine())), $e.node, new Position($start.getLine(), $start.getCharPositionInLine())); }

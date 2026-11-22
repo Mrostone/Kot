@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import kot.ast.function.FunctionDec;
+import kot.ast.function.ReturnExp;
 import kot.ast.var.VarDec;
 import kot.binder.Binder;
 import kot.utils.Position;
@@ -130,6 +131,10 @@ public class SeqExp extends Exp {
                 asm.lastExp = null;
             }
         }
+        //if(list.getLast() instanceof ReturnExp)
+        //{
+        //    func = func.concat("\tret\n");
+        //}
         func = func.concat("\tret\n");
         asm.funcMap.put(this,func);
         return asm;

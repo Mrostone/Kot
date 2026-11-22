@@ -77,8 +77,11 @@ public class OpExp extends Exp{
         if (op.equals(Op.sub)) {
             out = String.format("\tmov %s, %%r12\n\tmov %s, %%rsi\n\tsub %%rsi, %%r12\n", leftValue, rightValue);
         }
-        else if (op.equals(Op.mul) || op.equals(Op.div)) {
-            //TODO
+        else if (op.equals(Op.mul)) {
+            out = String.format("\tmov %s, %%r12\n\tmov %s, %%rsi\n\timul %%rsi, %%r12\n", leftValue, rightValue);
+        }
+        else if (op.equals(Op.div)) {
+            out = String.format("\tmov %s, %%r12\n\tmov %s, %%rsi\n\tidiv %%rsi, %%r12\n", leftValue, rightValue);
         }
         else if (op.equals(Op.eq) || op.equals(Op.ge) || op.equals(Op.gt) || op.equals(Op.le) || op.equals(Op.lt) || op.equals(Op.ne)) {
             out = String.format("\tmov %s, %%rdi\n\tmov %s, %%rsi\n\tmov $%d, %%rdx\n", leftValue, rightValue, op.getNum());

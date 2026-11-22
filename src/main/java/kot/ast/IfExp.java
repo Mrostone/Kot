@@ -1,7 +1,9 @@
 package kot.ast;
 
 import kot.assembly.Assembly;
+import kot.ast.type.IntType;
 import kot.ast.type.VoidType;
+import kot.ast.var.IntExp;
 import kot.binder.Binder;
 import kot.utils.Position;
 import java.util.ArrayList;
@@ -43,6 +45,10 @@ public class IfExp extends Exp {
     public void typeCheck() {
         if (op != null) {
             op.typeCheck();
+        }
+        if(op.type != IntType.getInstance())
+        {
+            ErrorHandler.error(this, 4, "Op type is : " + op.type.getClass() + " should be : " + IntType.getInstance().getClass());
         }
         if (body != null) {
             body.typeCheck();
@@ -89,18 +95,25 @@ public class IfExp extends Exp {
     @Override
     public Assembly assemble(Assembly asm) {
         String out = "";
+
+        body.assemble(asm);
+
         if (op instanceof OpExp) {
             OpExp opExp = (OpExp) op;
             opExp.assemble(asm);
             out = out.concat(asm.lastExp);
+            out = out.concat("\tcall my_if\n");
+            out = out.concat("\tcmp $1, %rax\n");
+            out = out.concat("\tje " + body.nameAssembly + "\n");
+        }
+        else if (op instanceof IntExp) {
+            IntExp intExp = (IntExp) op;
+            intExp.assemble(asm);
+            out = out.concat("\txor %r12, %r12\n");
+            out = out.concat("\tcmp " + asm.lastExp + ", %r12\n");
+            out = out.concat("\tjne " + body.nameAssembly + "\n");
         }
         // TODO other type of op
-        out = out.concat("\tcall my_if\n");
-        out = out.concat("\tcmp $1, %rax\n");
-        
-        body.assemble(asm);
-
-        out = out.concat("\tje " + body.nameAssembly + "\n");
 
         for (IfExp el : elifList)
         {

@@ -69,7 +69,14 @@ public class OpExp extends Exp{
         asm = right.assemble(asm);
         String rightValue = asm.lastExp;
 
-        String out = String.format("\tmov %s, %%rdi\n\tmov %s, %%rsi\n\tmov $%d, %%rdx\n", leftValue, rightValue, op.getNum());
+        String out = "";
+
+        if (op.equals(Op.add) || op.equals(Op.sub) || op.equals(Op.mul) || op.equals(Op.div)) {
+            //TODO
+        }
+        else if (op.equals(Op.eq) || op.equals(Op.ge) || op.equals(Op.gt) || op.equals(Op.le) || op.equals(Op.lt) || op.equals(Op.ne)) {
+            out = String.format("\tmov %s, %%rdi\n\tmov %s, %%rsi\n\tmov $%d, %%rdx\n", leftValue, rightValue, op.getNum());
+        }
 
         asm.lastExp = out;
         return asm;

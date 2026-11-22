@@ -61,6 +61,7 @@ public class AssignExp extends Exp {
 
         if(var.type == IntType.getInstance())
         {
+            //System.out.println("exp : " + expValue);
             String out = String.format("\tmovq %s, %s\n", expValue, var.name);
             asm.lastExp = out;
         }

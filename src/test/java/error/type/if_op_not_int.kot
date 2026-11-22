@@ -1,0 +1,8 @@
+int main()
+{
+    if ("nope")
+    {
+        return 5;
+    }
+    return 4;
+}

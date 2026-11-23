@@ -1,7 +1,7 @@
 package kot.assembly;
 
 import kot.ast.*;
-import kot.ast.var.VarDec;
+import kot.ast.var.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,20 +14,26 @@ public class Assembly {
     String out = ".globl _start\n\n";
 
     public HashMap<VarDec,String> varMap;
+    public HashMap<StringExp,String> stringMap;
     public HashMap<Exp,String> funcMap;
     public SeqExp main = null;
     public int nbFunc;
     public int nbString;
+    public int nbLabel;
     public String lastExp;
+    public boolean isElif;
 
     public Assembly(Ast ast, String file) {
         this.ast = ast;
         this.file = file;
         this.varMap = new HashMap<>();
         this.funcMap = new HashMap<>();
+        this.stringMap = new HashMap<>();
         this.nbFunc = 0;
         this.nbString = 0;
+        this.nbLabel = 0;
         this.lastExp = null;
+        this.isElif = false;
     }
 
     public void convert() {
@@ -53,6 +59,16 @@ public class Assembly {
         for (VarDec varDec : varMap.keySet())
         {
             out = out.concat(varMap.get(varDec));
+        }
+        out = out.concat("\n");
+
+        if(!stringMap.isEmpty())
+        {
+            out = out.concat("\n.section .rodata\n\n");
+        }
+        for (StringExp stringExp : stringMap.keySet())
+        {
+            out = out.concat(stringMap.get(stringExp));
         }
         out = out.concat("\n");
         out = out.concat(".text\n_start:\n");

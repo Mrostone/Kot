@@ -131,11 +131,11 @@ public class SeqExp extends Exp {
                 asm.lastExp = null;
             }
         }
-        //if(list.getLast() instanceof ReturnExp)
-        //{
-        //    func = func.concat("\tret\n");
-        //}
-        func = func.concat("\tret\n");
+        if(list.getLast() instanceof ReturnExp)
+        {
+            func = func.concat("\tret\n");
+        }
+        //func = func.concat("\tret\n");
         asm.funcMap.put(this,func);
         return asm;
     }

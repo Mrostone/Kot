@@ -1,9 +1,11 @@
 package kot.ast.function;
 
+import kot.assembly.Assembly;
 import kot.ast.*;
 import kot.binder.Binder;
 import kot.utils.ErrorHandler;
 import kot.utils.Position;
+import kot.utils.Regs;
 
 import java.util.*;
 
@@ -51,5 +53,40 @@ public class CallExp extends Exp {
             }
         }
         this.type = functionDec.getType();
+    }
+
+    @Override 
+    public Assembly assemble(Assembly asm) {
+        if (name.equals("print")) {
+            String out = "";
+            Exp e = args.getFirst();
+            e.assemble(asm);
+            out = out.concat(String.format("\tmov $%s, %%rdi\n", e.nameAssembly));
+            out = out.concat("\tcall print_string\n");
+            asm.lastExp = out;
+            return asm;
+        }
+        else if (name.equals("exit")) {
+            return asm;
+        }
+        else if (name.equals("strCmp")) {
+            return asm;
+        }
+        else if (name.equals("toString")) {
+            return asm;
+        }
+        else {
+            int arg = 0;
+            String out = "";
+            for (Exp e : args)
+            {
+                e.assemble(asm);
+                out = out.concat(String.format("\tmov %s, %s\n", asm.lastExp, Regs.getReg(arg)));
+                arg++;
+            }
+            out = out.concat("\tcall " + name + "\n");
+            asm.lastExp = out;
+            return asm;
+        }
     }
 }

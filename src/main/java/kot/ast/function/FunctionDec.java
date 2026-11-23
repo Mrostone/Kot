@@ -3,6 +3,8 @@ package kot.ast.function;
 import java.util.List;
 
 import kot.ast.type.Type;
+import kot.ast.type.VoidType;
+import kot.ast.var.IntExp;
 import kot.ast.var.VarDec;
 import kot.binder.Binder;
 import kot.utils.ErrorHandler;
@@ -13,10 +15,10 @@ import kot.ast.*;
 public class FunctionDec extends Exp{
     public String name;
     public List<VarDec> list;
-    public Exp body;
+    public SeqExp body;
     public boolean isUsed;
 
-    public FunctionDec(Type type, String name, List<VarDec> list, Exp body, Position pos){
+    public FunctionDec(Type type, String name, List<VarDec> list, SeqExp body, Position pos){
         this.type = type;
         this.name = name;
         this.list = list;
@@ -57,7 +59,13 @@ public class FunctionDec extends Exp{
         }
         if (body != null) {
             body.typeCheck();
-            if (body.getType() != this.type) {
+            if (body.getType() == VoidType.getInstance() && name.equals("main"))
+            {
+                IntExp intExp = new IntExp("0", this.pos);
+                ReturnExp returnExp = new ReturnExp(intExp, this.pos);
+                body.list.addLast(returnExp);
+            }
+            else if (body.getType() != this.type) {
                 ErrorHandler.error(this, 4, "type body different from type function " + this.type + " and " + body.getType());
             }
         }

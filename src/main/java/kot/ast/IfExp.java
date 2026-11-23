@@ -98,6 +98,8 @@ public class IfExp extends Exp {
 
         body.assemble(asm);
 
+        String label = "if_label_" + asm.nbLabel;
+
         if (op instanceof OpExp) {
             OpExp opExp = (OpExp) op;
             opExp.assemble(asm);
@@ -105,6 +107,10 @@ public class IfExp extends Exp {
             out = out.concat("\tcall my_if\n");
             out = out.concat("\tcmp $1, %rax\n");
             out = out.concat("\tje " + body.nameAssembly + "\n");
+            if (!elifList.isEmpty())
+            {
+                out = out.concat("\tjmp " + label + "\n");
+            }
         }
         else if (op instanceof IntExp) {
             IntExp intExp = (IntExp) op;
@@ -112,14 +118,28 @@ public class IfExp extends Exp {
             out = out.concat("\txor %r12, %r12\n");
             out = out.concat("\tcmp " + asm.lastExp + ", %r12\n");
             out = out.concat("\tjne " + body.nameAssembly + "\n");
+            if (!elifList.isEmpty())
+            {
+                out = out.concat("\tjmp " + label + "\n");
+            }
         }
         // TODO other type of op
 
+        asm.isElif = true;
         for (IfExp el : elifList)
         {
             el.assemble(asm);
             out = out.concat(asm.lastExp);
         }
+        if (!asm.isElif)
+        {
+            out = out.concat(label + ": ");
+        }
+        if (!asm.isElif)
+        {
+            asm.nbLabel++;
+        }
+        asm.isElif = false;
 
         asm.lastExp = out;
         return asm;

@@ -1,0 +1,12 @@
+int nFibo(int n) {
+    if (n <= 1) {
+        return n;
+    }
+    return nFibo(n - 1) + nFibo(n - 2);
+}
+
+int main()
+{
+    print("Fibo 20 : 6765\n");
+    print(toString(nFibo(20)));
+}

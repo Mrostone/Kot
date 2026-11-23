@@ -119,6 +119,13 @@ public class Binder {
             ast.exps.addFirst(func);
             return func;
         }
+        else if (name.equals("toString")) {
+            ArrayList<VarDec> list = new ArrayList<>();
+            list.add(new VarDec("number", IntType.getInstance(), null, new Position(0, 0)));
+            FunctionDec func = new FunctionDec(StringType.getInstance(), name, list, null, new Position(0, 0));
+            ast.exps.addFirst(func);
+            return func;
+        }
         return null;
     }
 

@@ -19,9 +19,8 @@ public class Assembly {
     public SeqExp main = null;
     public int nbFunc;
     public int nbString;
-    public int nbLabel;
+    public int nbIf;
     public String lastExp;
-    public boolean isElif;
 
     public Assembly(Ast ast, String file) {
         this.ast = ast;
@@ -31,9 +30,8 @@ public class Assembly {
         this.stringMap = new HashMap<>();
         this.nbFunc = 0;
         this.nbString = 0;
-        this.nbLabel = 0;
+        this.nbIf = 0;
         this.lastExp = null;
-        this.isElif = false;
     }
 
     public void convert() {

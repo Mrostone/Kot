@@ -25,6 +25,7 @@ public class StringExp extends Exp{
         String name = "string_" + asm.nbString;
         this.nameAssembly = name;
         asm.nbString++;
+        value = value.replaceAll("\n", "\\\\n");
         String var = String.format("%s: .ascii \"%s\"\n\t.equ len, . - %s\n", name, value, name);
         asm.stringMap.put(this, var);
         return asm;
